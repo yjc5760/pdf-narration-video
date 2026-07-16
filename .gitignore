@@ -1,0 +1,19 @@
+# 環境變數與機密資訊
+.env
+
+# 暫存與快取檔案
+__pycache__/
+*.pyc
+work/
+
+# 輸出成品與素材
+# 視情況可不加入版控，若要追蹤成品請將下方註解掉
+# output/
+# images/
+# *.mp4
+# *.srt
+# *.mp3
+
+# 系統檔案
+.DS_Store
+Thumbs.db
