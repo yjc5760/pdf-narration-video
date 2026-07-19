@@ -4,10 +4,10 @@
 
 ```
 pdf-narration-video/
+├─ .agents/      ← AntiGravity 原生技能區 (含 pdf-narration-video)
 ├─ input/        ← 來源 PDF 集中放這裡(新簡報放進來)
 ├─ output/       ← 成品影片+字幕,依專案命名(SS-2023-1.mp4 / .srt)
-├─ tools/        ← 共用工具:pipeline.py 等腳本、heteronyms.json、
-│                   ffmpeg.exe/ffprobe.exe、pdf-narration-video.skill
+├─ tools/        ← 共用工具:pipeline.py 等腳本、heteronyms.json
 ├─ SS-2022-1/    ← 專案工作區(narration.md、images/、work/ TTS快取)
 └─ SS-2023-1/    ← 同上
 ```
