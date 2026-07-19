@@ -159,6 +159,14 @@ python3 pipeline.py --engine elevenlabs
 - **注意**:舊的 `work/` 產物(25fps 片段、`manifest.json`)與新版不相容,
   升級後第一次跑前請先清空 `work/`
 
+## 踩坑紀錄（自 PROJECT_NOTES.md 併入,2026-07-19）
+
+- **大檔案上傳警告**:`tools/ffmpeg.exe` 與 `ffprobe.exe` 體積約 97MB,推送到 GitHub 會觸發容量警告。已從版控移除,改由 winget 全域安裝。
+- **NotebookLM MCP 伺服器啟動失敗**:`uv` 安裝的套件同時提供 `nlm.exe`(CLI)與 `notebooklm-mcp.exe`(MCP Server)。設定檔必須指定絕對路徑且不帶 `args`,否則會找不到執行檔或不支援子指令。
+- **Windows cmd 中文亂碼與字節偏移**:`.bat` 內含 UTF-8 中文註解且 `chcp 65001` 未生效時,CMD 會因 CP950 解碼錯誤切斷指令(如 `THONIOENCODING is not recognized`)。解法:`.bat` 內改用純 ASCII 英文註解。
+- **winget 安裝後 PATH 未即時更新**:裝完 FFmpeg 當下的終端機不會更新 `PATH`,`pipeline.py` 報 `FileNotFoundError`。解法:`run_azure.bat` 內已加入自動搜尋 `%LOCALAPPDATA%\Microsoft\WinGet\Packages` 下 `ffmpeg\bin` 並動態加入 `PATH`。
+- **共用腳本的路徑陷阱(`__file__`)**:`pipeline.py` 移入 `tools/` 後,內部若用 `Path(__file__).parent` 定位專案資源會讀錯位置。解法:專案基底路徑改用 `Path.cwd()`。
+
 ## 已知限制 / 之後可以優化的地方
 
 - 影片統一輸出 1920x1080,若簡報比例不是 16:9,圖片會加黑邊(letterbox)

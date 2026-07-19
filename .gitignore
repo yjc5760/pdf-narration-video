@@ -6,13 +6,13 @@ __pycache__/
 *.pyc
 work/
 
-# 輸出成品與素材
-# 視情況可不加入版控，若要追蹤成品請將下方註解掉
-# output/
-# images/
-# *.mp4
-# *.srt
-# *.mp3
+# 輸出成品與素材（大檔不進版控；成品正本在本機根目錄 output/）
+output/
+images/
+input/
+*.mp4
+*.srt
+*.mp3
 
 # 系統檔案
 .DS_Store
