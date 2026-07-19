@@ -21,3 +21,6 @@ Thumbs.db
 # 忽略大型執行檔
 tools/*.exe
 *.exe
+
+# 備份檔案
+tts_cache_backup_*.zip

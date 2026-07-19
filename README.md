@@ -9,8 +9,8 @@ pdf-narration-video/
 ├─ output/       ← 成品影片+字幕,依專案命名(SS-2023-1.mp4 / .srt)
 ├─ tools/        ← 共用工具:pipeline.py 等腳本、heteronyms.json
 ├─ SS-2022-1/    ← 專案工作區(narration.md、images/、work/ TTS快取)
-└─ SS-2023-1/    ← 同上
-```
+├─ SS-2023-1/    ← 同上
+└─ RC-U1-1_梁彎矩強度分析與設計/ ← 同上
 
 慣例:開新專案時請直接在根目錄執行 `init_project.bat 您的檔案.pdf`，腳本會幫您建好資料夾、轉好圖片並產生講稿模板。之後進入專案執行 `..\tools\run_azure.bat` 即可（它會自動讀取根目錄的 `.env`）。跑完把
 `output/final_video.mp4` 改名成專案名複製到根目錄 `output/`。
@@ -116,6 +116,7 @@ python3 pipeline.py --engine elevenlabs
 | `process_pages.py` | 分批處理頁面用,`python3 process_pages.py 起始頁 結束頁 --engine azure`(也可直接用 `pipeline.py --pages 1-5`) |
 | `assemble.py` | 所有頁面處理完後,串接成最終影片+字幕(讀 `work/page-NN.json` 快取) |
 | `run_azure.bat` | Windows(cmd)專用:自動讀 `.env` 設環境變數再跑 `pipeline.py --engine azure` |
+| `backup_cache.bat` | Windows(cmd)專用:自動打包各專案 `work/` 內的 TTS 快取（json 與 mp3）為 ZIP 備份檔 |
 | `.env` | 存放 `AZURE_SPEECH_KEY` / `AZURE_SPEECH_REGION`(不要進版控) |
 | `narration.md` | 逐頁講稿,`pipeline.py` 實際讀取的檔案(格式:`## 頁 N — 標題`) |
 | `SS-2023-1-narration-script.md` | 同一份講稿的可讀版備份 |
