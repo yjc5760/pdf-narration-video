@@ -4,7 +4,14 @@ setlocal enabledelayedexpansion
 chcp 65001 >nul
 set PYTHONIOENCODING=utf-8
 
-:: 尋找 .env (先找當前目錄，再找上一層目錄)
+rem Fallback for freshly installed winget ffmpeg (where PATH is not refreshed)
+for /d %%d in ("%LOCALAPPDATA%\Microsoft\WinGet\Packages\Gyan.FFmpeg*") do (
+    for /d %%f in ("%%d\ffmpeg-*") do (
+        set "PATH=%%f\bin;!PATH!"
+    )
+)
+
+rem Find .env in current or parent directory
 set ENV_FILE=
 if exist ".env" (
     set ENV_FILE=.env
@@ -23,7 +30,7 @@ for /f "usebackq eol=# tokens=1,* delims==" %%A in ("!ENV_FILE!") do (
     if not "%%A"=="" set "%%A=%%~B"
 )
 
-:: 取得 pipeline.py 絕對路徑，確保不論在哪個資料夾執行都能找到
+rem Get pipeline.py absolute path
 set PIPELINE_SCRIPT=%~dp0pipeline.py
 
 python "!PIPELINE_SCRIPT!" --engine azure %*

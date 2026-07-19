@@ -34,7 +34,8 @@ import argparse
 from pathlib import Path
 from xml.sax.saxutils import escape as xml_escape
 
-BASE_DIR = Path(__file__).parent
+TOOLS_DIR = Path(__file__).parent
+BASE_DIR = Path.cwd()
 IMAGES_DIR = BASE_DIR / "images"
 NARRATION_MD = BASE_DIR / "narration.md"
 WORK_DIR = BASE_DIR / "work"
@@ -113,7 +114,7 @@ def scan_heteronyms(pages: dict):
     """掃描講稿中的破音字高風險詞(heteronyms.json 存在才執行,僅提醒不阻擋)。
     Azure 對破音字通常判斷正確,ElevenLabs 風險較高;可搭配 --verify 實際確認。"""
     het_path = None
-    for cand in (BASE_DIR / "heteronyms.json", BASE_DIR / "references" / "heteronyms.json"):
+    for cand in (TOOLS_DIR / "heteronyms.json", TOOLS_DIR / "references" / "heteronyms.json", BASE_DIR / "heteronyms.json"):
         if cand.exists():
             het_path = cand
             break
