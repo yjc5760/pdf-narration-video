@@ -2,15 +2,14 @@
 
 ## 這個專案在做什麼
 把 NotebookLM 產生的簡報 PDF 轉成有精準逐字字幕的中文語音講解影片。
-完整工作流程定義在 `pdf-narration-video` skill(tools/pdf-narration-video-SKILL.md
-是同一份的拷貝),做影片任務時先讀它,不要自己重新發明流程。
+完整工作流程定義在原生技能檔案 `.agents/skills/pdf-narration-video/SKILL.md` 中。
+做影片任務時先讀它，不要自己重新發明流程。
 
 ## 資料夾結構(必須遵守)
 ```
 input/       來源 PDF 集中放這裡
 output/      成品影片+字幕,依專案命名(例:SS-2023-1.mp4 / .srt)
-tools/       共用工具:pipeline.py 等腳本、heteronyms.json、
-             skill 檔——唯一的正本,要改腳本改這裡
+tools/       共用工具:pipeline.py 等腳本、heteronyms.json (要改腳本改這裡)
 SS-XXXX-X/   每個專案一個資料夾:narration.md、images/、work/
 ```
 
