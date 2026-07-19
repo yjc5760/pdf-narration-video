@@ -8,8 +8,8 @@
 1. **工作目錄約定**：
    - `input/`：存放所有的原始 PDF 檔案。
    - `output/`：存放最終產出的成品影片與字幕（`.mp4`, `.srt`）。
-   - `tools/`：存放共用的 Python 腳本、FFmpeg 執行檔等工具。
-   - 個別專案目錄（例如 `SS-2023-1/`）：存放每個簡報轉換過程的講稿 (`narration.md`)、產生的圖片 (`images/`) 與快取檔案 (`work/`)。
+   - `tools/`：存放共用的 Python 腳本等核心工具。
+   - 個別專案目錄（例如 `SS-2023-1/`）：由 `init_project.bat` 自動建立，存放講稿 (`narration.md`)、圖片 (`images/`) 與快取 (`work/`)。
 2. **檔案操作鐵則**：
    - 絕對禁止刪除 `work/` 裡面的 TTS 快取檔（`page-*.json`, `page-*.mp3`），否則會導致浪費 TTS API 額度。
    - 移動檔案一律使用 `cp` 驗證後再刪除來源，禁止直接使用 `mv`。

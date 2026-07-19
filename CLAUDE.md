@@ -11,12 +11,14 @@ input/       來源 PDF 集中放這裡
 output/      成品影片+字幕,依專案命名(例:SS-2023-1.mp4 / .srt)
 tools/       共用工具:pipeline.py 等腳本、heteronyms.json、
              skill 檔——唯一的正本,要改腳本改這裡
-SS-XXXX-X/   每個專案一個資料夾:narration.md、images/、work/、腳本拷貝、.env
+SS-XXXX-X/   每個專案一個資料夾:narration.md、images/、work/
 ```
 
-開新專案:PDF 放 input/ → 建同名專案資料夾 → 從 tools/ 拷貝
-pipeline.py、assemble.py、process_pages.py、run_azure.bat、heteronyms.json
-進去 → 跑完把 output/final_video.mp4 改成專案名,複製到根目錄 output/。
+開新專案:
+1. 準備好 PDF 並執行 `init_project.bat 您的檔案.pdf` 建立專案。
+2. 進入專案資料夾修改 `narration.md` 講稿。
+3. 在專案內執行 `..\tools\run_azure.bat` 產生影片（自動往上讀取根目錄的 `.env`）。
+4. 跑完把 output/final_video.mp4 改成專案名,複製到根目錄 output/。
 
 ## 鐵則
 1. **絕不刪 `work/` 裡的 `page-*.json` + `page-*.mp3`** ——那是付費 Azure TTS

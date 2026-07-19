@@ -8,14 +8,12 @@ pdf-narration-video/
 ├─ output/       ← 成品影片+字幕,依專案命名(SS-2023-1.mp4 / .srt)
 ├─ tools/        ← 共用工具:pipeline.py 等腳本、heteronyms.json、
 │                   ffmpeg.exe/ffprobe.exe、pdf-narration-video.skill
-├─ SS-2022-1/    ← 專案工作區(narration.md、images/、work/ TTS快取、腳本拷貝)
+├─ SS-2022-1/    ← 專案工作區(narration.md、images/、work/ TTS快取)
 └─ SS-2023-1/    ← 同上
 ```
 
-慣例:開新專案時建立同名資料夾,從 tools/ 拷貝腳本進去,跑完把
+慣例:開新專案時請直接在根目錄執行 `init_project.bat 您的檔案.pdf`，腳本會幫您建好資料夾、轉好圖片並產生講稿模板。之後進入專案執行 `..\tools\run_azure.bat` 即可（它會自動讀取根目錄的 `.env`）。跑完把
 `output/final_video.mp4` 改名成專案名複製到根目錄 `output/`。
-各專案的 run_azure.bat 已設定會自動把 `..\tools` 加進 PATH,
-所以 ffmpeg.exe 只需要 tools/ 那一份。
 work/ 內的 page-*.json + page-*.mp3 是付費 TTS 快取,改講稿重跑前不要刪。
 
 ## 目前狀態:已跑通正式版(Azure TTS + 精準字幕)
@@ -127,16 +125,19 @@ python3 pipeline.py --engine elevenlabs
 這個流程已經打包成 Claude skill(`pdf-narration-video`),之後只要跟 Claude 說
 「把這份PDF轉成講解影片」之類的話就會自動套用,不用照著下面手動操作。手動流程:
 
-1. 把新的 PDF 每頁轉圖片:
+1. 將您的 PDF 放到 `input/` 資料夾中（或其他您喜歡的路徑）。
+2. 在根目錄執行自動化腳本：
    ```bash
-   pdftoppm -jpeg -r 150 你的檔案.pdf images/slide
+   init_project.bat input/你的檔案.pdf
    ```
-2. 讀懂每一頁內容,準備對應的逐頁講稿 `narration.md`(格式參考現有檔案的
-   `## 頁 N — 標題` 結構,講稿要口語化、不要照抄投影片條列文字)
-3. 準備好 `.env`(`AZURE_SPEECH_KEY` / `AZURE_SPEECH_REGION`)
-4. Windows 執行 `run_azure.bat`;macOS/Linux 執行
-   `set -a; source .env; set +a; python3 pipeline.py --engine azure`
-   (頁數多、擔心逾時的話,分批用 `process_pages.py` + `assemble.py`)
+   它會自動建立專案資料夾、呼叫 `pdftoppm` 轉出圖片，並產生對應頁數的 `narration.md` 講稿模板。
+3. 進入新建的專案資料夾，讀懂每一頁圖片內容，並在 `narration.md` 的對應區塊填寫口語化的講稿。
+4. 確保根目錄已經有一份 `.env` 設定檔（包含 `AZURE_SPEECH_KEY` 與 `AZURE_SPEECH_REGION`）。
+5. 在專案資料夾內執行：
+   ```bash
+   ..\tools\run_azure.bat
+   ```
+   (macOS/Linux 則執行 `set -a; source ../.env; set +a; python3 ../tools/pipeline.py --engine azure`)
 
 ## 2026-07 優化紀錄
 
