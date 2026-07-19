@@ -34,5 +34,4 @@ SS-XXXX-X/   每個專案一個資料夾:narration.md、images/、work/
 - tools/pipeline.py 是 v2:支援 `[[顯示|朗讀]]` 語法、`--verify` ASR 發音回驗
   (用同一組 Azure 金鑰)、faststart、產出後品質三檢。
 - `tools/run_azure.bat` 已加入 UTF-8 編碼強制設定 (`chcp 65001` / `PYTHONIOENCODING=utf-8`)，避免 Windows 終端機遇到中文字元時產生 `UnicodeEncodeError`。
-- SS-2023-1 用的是 v2;**SS-2022-1 的 pipeline.py 仍是舊版**(使用者選擇保留),
-  若要回頭改該專案,先從 tools/ 拷貝新版過去。
+- 各專案資料夾內不再存放腳本正本。執行時一律呼叫 `..\tools\run_azure.bat` 共用最新版流程。

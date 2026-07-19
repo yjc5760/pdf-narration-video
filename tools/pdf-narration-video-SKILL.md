@@ -23,25 +23,17 @@ PDF 每頁 → 圖片(pdftoppm)
 
 ## 執行步驟
 
-### 1. 確認專案資料夾與素材
+### 1. 建立專案與素材準備
 
-在使用者的專案資料夾裡(例如 `工作資料夾/專案名稱/`)準備好:
-- 來源 PDF(使用者提供)
-- 把 `scripts/pipeline.py`、`scripts/process_pages.py`、`scripts/assemble.py`、
-  `scripts/run_azure.bat`、`references/heteronyms.json` 複製進這個資料夾
-
-### 2. PDF 轉圖片
-
+在專案根目錄執行一鍵初始化腳本：
+```bash
+init_project.bat input/你的檔案.pdf
 ```
-pdftoppm -jpeg -r 150 你的檔案.pdf images/slide
-```
+它會自動建立專案資料夾、呼叫 `pdftoppm` 將 PDF 轉出圖片（存入 `images/`），並自動產生對應頁數的 `narration.md` 講稿模板。
 
-會產生 `images/slide-01.jpg` ... `images/slide-NN.jpg`。如果環境沒有 `pdftoppm`,
-它是 poppler-utils 的一部分,先確認有沒有裝。
+### 2. 讀懂內容,寫逐頁講稿
 
-### 3. 讀懂內容,寫逐頁講稿
-
-用 Read 工具逐頁打開 `images/slide-NN.jpg`(不要跳過任何一頁,PDF 常常沒有文字層,
+用 Read 工具逐頁打開專案內生成的 `images/slide-NN.jpg`(不要跳過任何一頁,PDF 常常沒有文字層,
 純粹是圖片,必須用視覺理解),為每一頁寫講稿。
 
 **角色設定**:你是大學土木工程系的資深教授,專門為學生講解台灣結構技師國家考試
@@ -118,13 +110,13 @@ AZURE_SPEECH_REGION="使用者的區域,例如 southeastasia、eastasia"
 
 ### 5. 執行 pipeline
 
-Windows 使用者通常用的是命令提示字元(cmd),不是 bash/PowerShell,所以：
+進入專案資料夾內（非根目錄），Windows 使用者通常用的是命令提示字元(cmd)：
 
-```
-run_azure.bat
+```bash
+..\tools\run_azure.bat
 ```
 
-這個批次檔會自動讀 `.env` 設定環境變數再執行 `python pipeline.py --engine azure`,
+這個批次檔會自動往上層找 `.env` 設定環境變數再呼叫 `tools/pipeline.py --engine azure`,
 使用者不用自己打 `export` / `set` 指令(那些在 cmd 裡常常打錯或格式不對)。
 
 如果簡報頁數很多、擔心單次執行逾時,改用分批模式:
