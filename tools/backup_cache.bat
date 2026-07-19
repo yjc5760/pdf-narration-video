@@ -14,7 +14,8 @@ echo 正在備份各專案 work/ 目錄下的 TTS 快取檔案...
 echo 備份檔案將儲存為: %BACKUP_FILE%
 
 :: 使用 PowerShell 將 page-*.json 與 page-*.mp3 打包
-powershell -NoProfile -Command "Get-ChildItem -Path '.\*\work\*' -Include 'page-*.json','page-*.mp3' -ErrorAction SilentlyContinue | Compress-Archive -DestinationPath '%BACKUP_FILE%' -Force"
+:: 注意:必須保留「專案/work/檔名」相對路徑,否則不同專案的 page-01.mp3 會互相覆蓋
+powershell -NoProfile -Command "Add-Type -AssemblyName System.IO.Compression.FileSystem; $zip=[System.IO.Compression.ZipFile]::Open('%BACKUP_FILE%','Create'); Get-ChildItem -Path '.\*\work\*' -Include 'page-*.json','page-*.mp3' -ErrorAction SilentlyContinue | ForEach-Object { $rel=(Resolve-Path -Relative $_.FullName).TrimStart('.','\').Replace('\','/'); [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip,$_.FullName,$rel) } | Out-Null; $zip.Dispose()"
 
 if exist "%BACKUP_FILE%" (
     echo [成功] 備份完成！
