@@ -154,7 +154,7 @@ python3 pipeline.py --engine elevenlabs
 - **錯誤訊息**:ffmpeg/TTS 失敗時會印出 stderr,不再吞掉
 - **process_pages.py 支援 `--engine`**:之前寫死 espeak,分批模式沒辦法跑 Azure
 - **Azure 音檔改存 `.mp3`**(實際格式本來就是 MP3);靜態圖改 10fps 編碼,更快更小
-- **run_azure.bat**:容忍 `.env` 的空行/`#` 註解,失敗會停住顯示錯誤
+- **run_azure.bat**:容忍 `.env` 的空行/`#` 註解,失敗會停住顯示錯誤；已加入 `chcp 65001` 與 `PYTHONIOENCODING=utf-8` 以解決 Windows CMD 下的 `UnicodeEncodeError` 亂碼錯誤
 - **注意**:舊的 `work/` 產物(25fps 片段、`manifest.json`)與新版不相容,
   升級後第一次跑前請先清空 `work/`
 
