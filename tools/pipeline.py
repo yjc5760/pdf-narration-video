@@ -768,7 +768,10 @@ def asr_transcribe_azure(audio_path: Path, duration: float) -> str:
     recognizer.start_continuous_recognition()
     done.wait(timeout=max(60.0, duration * 3))  # 一定要有 timeout,不要無限等
     recognizer.stop_continuous_recognition()
-    wav_path.unlink(missing_ok=True)
+    try:
+        wav_path.unlink(missing_ok=True)
+    except PermissionError:
+        pass
     return "".join(parts)
 
 

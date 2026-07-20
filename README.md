@@ -74,10 +74,10 @@ AZURE_SPEECH_REGION="你的區域,例如 southeastasia、eastasia"
 ```
 
 這個批次檔執行時，如果**不帶任何參數**，會跳出選單讓您選擇兩種輸出模式：
-1. **動態版（預設）**：包含頁間轉場動畫，且會將 ASS 逐字卡拉OK動態字幕直接燒錄進影片中。
-2. **傳統版**：硬切換頁的乾淨影片，搭配外掛 SRT/ASS 字幕（同等於帶上 `--plain` 參數）。
+1. **傳統版（預設）**：硬切換頁，畫面乾淨無特效，並提供獨立的 SRT 字幕檔。
+2. **動態版**：包含頁間轉場動畫，且會將 ASS 逐字卡拉OK動態字幕直接燒錄進影片中。
 
-如果不想看選單，可以直接加上參數執行（例如 `..\tools\run_azure.bat --engine azure` 會直接以動態版預設值執行；`..\tools\run_azure.bat --plain` 則會直接跑傳統版）。
+如果不想看選單，可以直接加上參數執行（例如 `..\tools\run_azure.bat --plain` 會直接以傳統版預設值執行；`..\tools\run_azure.bat --engine azure` 則會跑動態版）。
 
 macOS/Linux 使用者:
 
@@ -93,7 +93,7 @@ python3 pipeline.py --engine azure
 - `ffprobe`/`ffmpeg` 沒裝的話,錯誤會在 TTS 呼叫「成功之後」才跳出來
   (`FileNotFoundError: [WinError 2]`)，容易誤判成配音失敗——其實是缺工具。
   用 `winget install ffmpeg` 安裝，**裝完要開新的命令提示字元視窗**讓 PATH 生效。
-- **傳統版的外掛字幕亂碼問題**：如果選擇傳統版（未燒錄字幕），某些播放器對 UTF-8 中文外掛 SRT 支援不好會變亂碼。建議改用 VLC 播放器，或直接使用預設的「動態版」讓系統自動燒錄字幕。若是拿到舊版影片想手動燒錄，指令如下：
+- **傳統版的外掛字幕亂碼問題**：如果選擇傳統版（預設），某些播放器對 UTF-8 中文外掛 SRT 支援不好會變亂碼。建議改用 VLC 播放器，或直接改選「動態版」讓系統自動燒錄字幕。若是拿到舊版影片想手動燒錄，指令如下：
   ```
   ffmpeg -y -i output/final_video.mp4 -vf "subtitles=output/final_video.srt:force_style='FontName=Microsoft JhengHei,FontSize=28,PrimaryColour=&Hffffff,OutlineColour=&H000000,BorderStyle=1,Outline=2'" -c:a copy output/final_video_captioned.mp4
   ```
@@ -146,8 +146,11 @@ python3 pipeline.py --engine elevenlabs
 - **2026-07-20**: 
   - 新增專案 `EPC規範審圖工作流程` 並成功產出語音講解影片。
   - 修正 `README.md` 中 `run_azure.bat` 的路徑說明錯誤。
-  - 補充說明 `run_azure.bat` 執行時的兩種模式（動態版預設燒錄字幕、傳統版外掛字幕）的互動選單操作。
+  - 補充說明 `run_azure.bat` 執行時的兩種模式（傳統版預設外掛字幕、動態版燒錄字幕）的互動選單操作。
   - 實裝數字自動轉換規則 (`tools/number_rules.json`)，避免裸數字發音錯誤。
+  - 新增專案 `RC樑彎矩強度_考前總整理` 並成功產出語音講解影片（傳統版）。
+  - 將 `run_azure.bat` 預設輸出模式修改為「傳統版」，並同步更新所有相關文件與指南。
+  - 修正 `pipeline.py` 在發音回驗階段刪除暫存檔可能引發的 Windows `PermissionError` 問題。
 
 - **標點集合修正**:原本只含半形 `,!?`,但講稿實際用的是全形逗號/問號,導致
   斷句失效、對齊時可能誤吃時間戳。已改為全形+半形都涵蓋

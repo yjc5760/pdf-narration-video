@@ -33,7 +33,7 @@ SS-XXXX-X/   每個專案一個資料夾:narration.md、images/、work/
 - tools/pipeline.py 是 v3:支援 `[[顯示|朗讀]]` 語法、`--verify` ASR 發音回驗
   (用同一組 Azure 金鑰)、faststart、產出後品質三檢。
 - v3 新增:頁間轉場動畫(fade/slideleft/slideup/push 輪替,`--transition 0` 關閉)
-  與 ASS 逐字卡拉OK動態字幕,預設直接燒錄進 final_video.mp4(`--no-burn` 改外掛)。
+  與 ASS 逐字卡拉OK動態字幕,供需要時切換燒錄進 final_video.mp4(`--no-burn` 則外掛)。
   傳統純 SRT 模式仍在:`--plain`;`run_azure.bat` 不帶參數會出選單讓使用者選
   動態版/傳統版,帶參數則跳過選單。
   轉場動畫做在「下一頁片段開頭補的靜音段」內,片段間仍用 concat demuxer——

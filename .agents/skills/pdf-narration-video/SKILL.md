@@ -133,13 +133,13 @@ AZURE_SPEECH_REGION="使用者的區域,例如 southeastasia、eastasia"
 (**注意要帶 `--engine azure`,不帶預設是 espeak 機械音**)。
 
 執行完會產生:
-- `output/final_video.mp4`(含 faststart;預設已燒錄 ASS 動態字幕:逐字卡拉OK
+- `output/final_video.mp4`(含 faststart;若選動態版則已燒錄 ASS 字幕)
   上色+淡入淡出,並含頁間轉場動畫,fade/slideleft/slideup/push 依頁輪替)
 - `output/final_video.srt` / `.ass`(外掛字幕,逐字精準對齊)
 - `output/verify_frame.png`(第 3 秒抽出的畫面,供目視比對)
 
 **兩種輸出模式並存**:`run_azure.bat` 不帶參數執行時會出選單讓使用者選
-[1] 動態版(轉場+卡拉OK燒錄,預設)或 [2] 傳統版(硬切,乾淨影片+外掛 SRT);
+[1] 傳統版(硬切,乾淨影片+外掛 SRT,預設)或 [2] 動態版(轉場+卡拉OK燒錄);
 帶任何參數則跳過選單直接執行。傳統版即 `--plain`
 (= `--transition 0 --no-burn --no-karaoke` 的預設集,v2 行為)。
 
@@ -180,7 +180,7 @@ python pipeline.py --engine azure --verify
 
 ### 6. 字幕燒錄
 
-v3 起 pipeline **預設就把 ASS 動態字幕燒錄進 `final_video.mp4`**,不用另外處理;
+v3 起 pipeline **支援將 ASS 動態字幕燒錄進 `final_video.mp4`**(動態版),不用另外處理;
 用 `--no-burn` 才會退回「乾淨影片+外掛 .srt/.ass」模式。以下手動燒錄指令只在
 拿到舊版/外部影片、需要事後補燒 SRT 時使用:
 
