@@ -33,7 +33,18 @@ for /f "usebackq eol=# tokens=1,* delims==" %%A in ("!ENV_FILE!") do (
 rem Get pipeline.py absolute path
 set PIPELINE_SCRIPT=%~dp0pipeline.py
 
-python "!PIPELINE_SCRIPT!" --engine azure %*
+rem No arguments -> let the user pick a mode (any argument skips the menu)
+set MODE_ARGS=
+if "%~1"=="" (
+    echo.
+    echo 選擇輸出模式 / Choose output mode:
+    echo   [1] 動態版:頁間轉場動畫 + 逐字卡拉OK字幕燒錄 ^(預設^)
+    echo   [2] 傳統版:硬切換頁,乾淨影片 + 外掛 SRT 字幕
+    choice /c 12 /n /d 1 /t 30 /m "請按 1 或 2(30 秒未按自動選 1): "
+    if errorlevel 2 set MODE_ARGS=--plain
+)
+
+python "!PIPELINE_SCRIPT!" --engine azure !MODE_ARGS! %*
 if errorlevel 1 (
     echo.
     echo [ERROR] pipeline failed. See messages above.

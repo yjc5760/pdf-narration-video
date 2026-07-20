@@ -70,10 +70,14 @@ AZURE_SPEECH_REGION="你的區域,例如 southeastasia、eastasia"
 **Windows 使用者(命令提示字元 cmd,不是 bash/PowerShell)**直接執行:
 
 ```
-run_azure.bat
+..\tools\run_azure.bat
 ```
 
-這個批次檔會自動讀 `.env` 設定環境變數再執行 `python pipeline.py --engine azure`。
+這個批次檔執行時，如果**不帶任何參數**，會跳出選單讓您選擇兩種輸出模式：
+1. **動態版（預設）**：包含頁間轉場動畫，且會將 ASS 逐字卡拉OK動態字幕直接燒錄進影片中。
+2. **傳統版**：硬切換頁的乾淨影片，搭配外掛 SRT/ASS 字幕（同等於帶上 `--plain` 參數）。
+
+如果不想看選單，可以直接加上參數執行（例如 `..\tools\run_azure.bat --engine azure` 會直接以動態版預設值執行；`..\tools\run_azure.bat --plain` 則會直接跑傳統版）。
 
 macOS/Linux 使用者:
 
@@ -82,17 +86,14 @@ set -a; source .env; set +a
 python3 pipeline.py --engine azure
 ```
 
-`pipeline.py` 裡的 `synth_azure()` 預設用 `zh-TW-HsiaoChenNeural`,可以在
-程式裡改成你想要的聲音(例如 `zh-TW-YunJheNeural`)。
+`pipeline.py` 裡的 `synth_azure()` 預設用 `zh-TW-HsiaoChenNeural`，可以在程式裡改成你想要的聲音。
 
 ### Windows 常見卡關
 
 - `ffprobe`/`ffmpeg` 沒裝的話,錯誤會在 TTS 呼叫「成功之後」才跳出來
-  (`FileNotFoundError: [WinError 2]`),容易誤判成配音失敗——其實是缺工具,
-  不是金鑰或程式碼問題。用 `winget install ffmpeg` 安裝,**裝完要開新的命令
-  提示字元視窗**讓 PATH 生效。
-- 字幕顯示方塊亂碼:`final_video.mp4` 沒有燒錄字幕,是外部 `.srt` 檔,某些
-  播放器對 UTF-8 中文字幕支援不好才會這樣。換 VLC,或用下面指令燒錄進畫面:
+  (`FileNotFoundError: [WinError 2]`)，容易誤判成配音失敗——其實是缺工具。
+  用 `winget install ffmpeg` 安裝，**裝完要開新的命令提示字元視窗**讓 PATH 生效。
+- **傳統版的外掛字幕亂碼問題**：如果選擇傳統版（未燒錄字幕），某些播放器對 UTF-8 中文外掛 SRT 支援不好會變亂碼。建議改用 VLC 播放器，或直接使用預設的「動態版」讓系統自動燒錄字幕。若是拿到舊版影片想手動燒錄，指令如下：
   ```
   ffmpeg -y -i output/final_video.mp4 -vf "subtitles=output/final_video.srt:force_style='FontName=Microsoft JhengHei,FontSize=28,PrimaryColour=&Hffffff,OutlineColour=&H000000,BorderStyle=1,Outline=2'" -c:a copy output/final_video_captioned.mp4
   ```

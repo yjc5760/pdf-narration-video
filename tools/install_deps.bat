@@ -26,7 +26,7 @@ if errorlevel 1 (
     exit /b 1
 )
 
-rem --- 3. ffmpeg / ffprobe (exe already bundled in this folder) ---
+rem --- 3. ffmpeg / ffprobe (global install; winget fallback) ---
 echo.
 where ffmpeg >nul 2>nul
 if not errorlevel 1 goto ffmpeg_ok
@@ -58,9 +58,11 @@ if errorlevel 1 (
 echo           Open a NEW window afterwards so PATH takes effect.
 :poppler_done
 
-rem --- 5. .env check ---
+rem --- 5. .env check (root .env, one level above tools\) ---
 echo.
-if exist "%~dp0.env" (
+if exist "%~dp0..\.env" (
+    echo [OK] .env exists
+) else if exist "%~dp0.env" (
     echo [OK] .env exists
 ) else (
     echo [TODO] No .env yet. Create one with:

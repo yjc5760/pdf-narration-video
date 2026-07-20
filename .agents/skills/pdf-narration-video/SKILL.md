@@ -65,6 +65,13 @@ init_project.bat input/你的檔案.pdf
    - 英文縮寫:`[[SRSS|S R S S]]` → 唸出逐字母
    - TTS 老是唸錯的字:餵同音替身字,字幕仍顯示正確字(如 `[[換|喚]]`)
    字幕時間戳會自動對齊,不用手動處理。
+7. **數字不用手動標記**:pipeline 會依 `tools/number_rules.json` 自動把講稿裡的
+   裸數字轉成 `[[數字|中文讀法]]`(字幕顯示 4200,TTS 唸「四千兩百」;4.5→四點五、
+   86%→百分之八十六、2026年→二零二六年)。貼著英數/連字號/逗號的(SS-2023-1、
+   v1.2、1,200)不會動,需要的話手動標記;手動 `[[顯示|朗讀]]` 永遠優先。
+   `--no-auto-numbers` 可整批關閉。⚠ 對「數字轉換前就配好音」的舊專案重跑時,
+   含數字的頁會因快取 key 改變而重新 TTS(付費),pipeline 會逐頁警告;
+   想沿用舊快取就帶 `--no-auto-numbers`。
 
 寫成 `narration.md`,格式**必須**完全符合 `pipeline.py` 的 `parse_narration()` 解析規則:
 
@@ -126,9 +133,23 @@ AZURE_SPEECH_REGION="使用者的區域,例如 southeastasia、eastasia"
 (**注意要帶 `--engine azure`,不帶預設是 espeak 機械音**)。
 
 執行完會產生:
-- `output/final_video.mp4`(含 faststart,可直接上傳網路串流播放)
-- `output/final_video.srt`(逐字精準對齊)
+- `output/final_video.mp4`(含 faststart;預設已燒錄 ASS 動態字幕:逐字卡拉OK
+  上色+淡入淡出,並含頁間轉場動畫,fade/slideleft/slideup/push 依頁輪替)
+- `output/final_video.srt` / `.ass`(外掛字幕,逐字精準對齊)
 - `output/verify_frame.png`(第 3 秒抽出的畫面,供目視比對)
+
+**兩種輸出模式並存**:`run_azure.bat` 不帶參數執行時會出選單讓使用者選
+[1] 動態版(轉場+卡拉OK燒錄,預設)或 [2] 傳統版(硬切,乾淨影片+外掛 SRT);
+帶任何參數則跳過選單直接執行。傳統版即 `--plain`
+(= `--transition 0 --no-burn --no-karaoke` 的預設集,v2 行為)。
+
+其他參數:`--transition 0.5`(秒,0=關閉轉場)、`--transition-styles`
+(逗號分隔輪替清單)、`--no-karaoke`(不逐字上色)、`--no-burn`(不燒錄,只出外掛)。
+改這些參數只會重建 clip-*.mp4(免費、自動偵測),付費 TTS 快取完全不動。
+
+**轉場設計鐵則**:動畫做在「下一頁片段開頭補的靜音段」內(上一頁畫面當背景、
+本頁進場),片段之間仍用 concat demuxer 串接。**不要改成 xfade/acrossfade
+重疊式串接**——音畫各自獨立疊加,每頁的微小時長誤差會逐頁累積成音畫/字幕不同步。
 
 ### 5.5 產出後品質檢查(pipeline 會自動執行,但結果要看)
 
@@ -157,13 +178,11 @@ python pipeline.py --engine azure --verify
 - 不要為了讓分數過門檻反覆重跑——字幕用的是講稿原文,投影片上也有正確文字,
   觀眾有三重冗餘,確認關鍵詞有唸對就可以出貨
 
-### 6.(可選)字幕燒錄
+### 6. 字幕燒錄
 
-`final_video.mp4` 本身沒有燒錄字幕,只有外部 `.srt`。如果使用者的播放器顯示字幕是
-方塊亂碼(常見於某些播放器對外部 UTF-8 中文字幕支援不好),提供兩個方案:
-
-1. 換 VLC 播放(通常直接正常)
-2. 燒錄進畫面,保證任何播放器/平台都正常顯示:
+v3 起 pipeline **預設就把 ASS 動態字幕燒錄進 `final_video.mp4`**,不用另外處理;
+用 `--no-burn` 才會退回「乾淨影片+外掛 .srt/.ass」模式。以下手動燒錄指令只在
+拿到舊版/外部影片、需要事後補燒 SRT 時使用:
 
 ```
 ffmpeg -y -i output/final_video.mp4 -vf "subtitles=output/final_video.srt:force_style='FontName=Microsoft JhengHei,FontSize=28,PrimaryColour=&Hffffff,OutlineColour=&H000000,BorderStyle=1,Outline=2'" -c:a copy -movflags +faststart output/final_video_captioned.mp4

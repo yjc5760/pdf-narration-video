@@ -29,8 +29,18 @@ SS-XXXX-X/   每個專案一個資料夾:narration.md、images/、work/
 5. 執行環境是 Windows cmd(不是 bash/PowerShell),給使用者的指令用 cmd 語法
    或包成 .bat。
 
-## 現況備註(2026-07-19)
-- tools/pipeline.py 是 v2:支援 `[[顯示|朗讀]]` 語法、`--verify` ASR 發音回驗
+## 現況備註(2026-07-20)
+- tools/pipeline.py 是 v3:支援 `[[顯示|朗讀]]` 語法、`--verify` ASR 發音回驗
   (用同一組 Azure 金鑰)、faststart、產出後品質三檢。
+- v3 新增:頁間轉場動畫(fade/slideleft/slideup/push 輪替,`--transition 0` 關閉)
+  與 ASS 逐字卡拉OK動態字幕,預設直接燒錄進 final_video.mp4(`--no-burn` 改外掛)。
+  傳統純 SRT 模式仍在:`--plain`;`run_azure.bat` 不帶參數會出選單讓使用者選
+  動態版/傳統版,帶參數則跳過選單。
+  轉場動畫做在「下一頁片段開頭補的靜音段」內,片段間仍用 concat demuxer——
+  **不要改成 xfade 重疊式串接**,音畫各自疊加會逐頁累積不同步。
+  改轉場參數只重建 clip-*.mp4(免費),TTS 快取不受影響。
+- v3 新增數字自動轉換(`tools/number_rules.json`):裸數字自動變 `[[4200|四千兩百]]`,
+  字幕顯示數字、TTS 唸中文;`--no-auto-numbers` 關閉。對轉換前配好音的舊專案重跑,
+  含數字頁會重新 TTS(付費,會逐頁警告);要沿用舊快取帶 `--no-auto-numbers`。
 - `tools/run_azure.bat` 已加入 UTF-8 編碼強制設定 (`chcp 65001` / `PYTHONIOENCODING=utf-8`)，避免 Windows 終端機遇到中文字元時產生 `UnicodeEncodeError`。
 - 各專案資料夾內不再存放腳本正本。執行時一律呼叫 `..\tools\run_azure.bat` 共用最新版流程。
