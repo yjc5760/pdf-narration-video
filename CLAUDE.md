@@ -44,3 +44,4 @@ SS-XXXX-X/   每個專案一個資料夾:narration.md、images/、work/
   含數字頁會重新 TTS(付費,會逐頁警告);要沿用舊快取帶 `--no-auto-numbers`。
 - `tools/run_azure.bat` 已加入 UTF-8 編碼強制設定 (`chcp 65001` / `PYTHONIOENCODING=utf-8`)，避免 Windows 終端機遇到中文字元時產生 `UnicodeEncodeError`。
 - 各專案資料夾內不再存放腳本正本。執行時一律呼叫 `..\tools\run_azure.bat` 共用最新版流程。
+- 2026-07-22: 修復了 `tools/pipeline.py` 中 FFmpeg `_SCALE_PAD` 的奇數解析度導致影片無法合成的錯誤（加入 `trunc()` 及 `crop` 保障）；完成《GEL-元數據管理-說帖》動態版影片製作。

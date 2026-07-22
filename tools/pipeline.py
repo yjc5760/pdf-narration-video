@@ -48,7 +48,7 @@ TRANSITION_DEFAULT = 0.5  # 頁間轉場秒數;動畫發生在「下一頁開頭
 TRANSITION_STYLES = ["fade", "slideleft", "slideup", "push"]  # 依頁輪替
 
 _SCALE_PAD = ("scale=1920:1080:force_original_aspect_ratio=decrease,"
-              "pad=1920:1080:(ow-iw)/2:(oh-ih)/2")
+              "pad=1920:1080:trunc((ow-iw)/2):trunc((oh-ih)/2):color=black,crop=1920:1080:0:0")
 
 # 每種引擎實際輸出的音訊格式(azure 設定輸出 MP3,不要再存成 .wav 誤導)
 AUDIO_EXT = {"espeak": ".wav", "azure": ".mp3", "elevenlabs": ".mp3"}
